@@ -1,5 +1,5 @@
 /* =========================================================
-   Senses + Turma do Bem — configuração e comportamento da landing
+   IcomTV + Turma do Bem — configuração e comportamento da landing
    ========================================================= */
 
 const CONFIG = {
@@ -11,98 +11,15 @@ const CONFIG = {
   WHATSAPP_NUMBER: '5519989555714',
 
   // Identificação da origem do lead.
-  CAMPAIGN: 'Parceria Senses + Turma do Bem',
+  CAMPAIGN: 'Parceria IcomTV + Turma do Bem',
 };
-
-// Os 3 modelos ofertados na parceria (dados de gruposenses.com.br/atuacao/locacao-de-difusores/).
-const MODELS = [
-  {
-    id: 'brisa',
-    name: 'Brisa',
-    ideal: 'Consultórios e salas compactas',
-    tagline: 'Presença discreta e contínua para espaços compactos.',
-    area: 25,
-    price: 169,
-    specs: [
-      ['Cobertura', 'até 25 m²'],
-      ['Aspersão', 'Borrifação'],
-      ['Reservatório', '280 ml'],
-      ['Dimensões', '7,5 × 20 × 7,5 cm'],
-    ],
-  },
-  {
-    id: 'serena',
-    name: 'Serena',
-    ideal: 'Recepções de clínicas',
-    tagline: 'Controle preciso com nano nebulização em formato compacto.',
-    area: 45,
-    price: 269,
-    featured: true,
-    badge: 'Mais indicado para recepção',
-    specs: [
-      ['Cobertura', 'até 45 m²'],
-      ['Aspersão', 'Nano nebulização'],
-      ['Reservatório', '100 ml'],
-      ['Dimensões', '17 × 16 × 6 cm'],
-    ],
-  },
-  {
-    id: 'ventus',
-    name: 'Ventus',
-    ideal: 'Clínicas amplas e áreas integradas',
-    tagline: 'Aromatização inteligente via app, com até 5 rotinas programadas.',
-    area: 160,
-    price: 449,
-    specs: [
-      ['Cobertura', 'até 160 m²'],
-      ['Aspersão', 'Nano nebulização'],
-      ['Reservatório', '400 ml'],
-      ['Controle', 'App Scent Tech (Bluetooth)'],
-    ],
-  },
-];
-
-const INCLUDES = ['Comodato do equipamento', 'Garantia eterna', 'Essências MoreSenses recorrentes', 'Parte da mensalidade para a Turma do Bem'];
 
 document.documentElement.classList.remove('no-js');
 
-/* ---------- render dos modelos ---------- */
-function renderModels() {
-  const list = document.getElementById('models-list');
+/* ---------- cards "como participar" pré-selecionam a opção no formulário ---------- */
+function initParticipation() {
   const chips = document.getElementById('model-chips');
-  const maxArea = Math.max(...MODELS.map((m) => m.area));
-
-  list.innerHTML = MODELS.map((m) => `
-    <article class="model reveal${m.featured ? ' model--featured' : ''}">
-      ${m.badge ? `<span class="model__badge">${m.badge}</span>` : ''}
-      <span class="model__ideal">${m.ideal}</span>
-      <h3><small>Senses</small>${m.name}</h3>
-      <p class="model__tagline">${m.tagline}</p>
-      <div class="model__price">
-        <small>Assinatura mensal</small>
-        <div><span class="model__currency">R$</span><strong>${m.price}</strong><span class="model__per">/mês</span></div>
-        <em>Equipamento + essências + garantia eterna</em>
-      </div>
-      <div class="model__gauge">
-        <div class="model__gauge-top">
-          <strong>${m.area}<small>m²</small></strong>
-          <span>de cobertura</span>
-        </div>
-        <div class="model__bar"><i style="--w:${Math.max(12, (m.area / maxArea) * 100)}%"></i></div>
-      </div>
-      <ul class="model__specs">
-        ${m.specs.map(([k, v]) => `<li><span>${k}</span><strong>${v}</strong></li>`).join('')}
-      </ul>
-      <ul class="model__includes">
-        ${INCLUDES.map((i) => `<li>${i}</li>`).join('')}
-      </ul>
-      <a href="#formulario" class="btn btn--gold" data-model="${m.id}">Quero o ${m.name} <span aria-hidden="true">→</span></a>
-    </article>`).join('');
-
-  chips.insertAdjacentHTML('afterbegin', MODELS.map((m) => `
-    <label class="chip"><input type="radio" name="modelo" value="Senses ${m.name} (R$${m.price}/mês)" data-model="${m.id}"><span>${m.name} · R$${m.price}/mês</span></label>`).join(''));
-
-  list.addEventListener('click', (e) => {
+  document.getElementById('models-list').addEventListener('click', (e) => {
     const btn = e.target.closest('[data-model]');
     if (!btn) return;
     const radio = chips.querySelector(`input[data-model="${btn.dataset.model}"]`);
@@ -184,13 +101,12 @@ function maskPhone(v) {
 
 function whatsappLink(lead) {
   const lines = [
-    `Olá! Vim pela parceria Senses + Turma do Bem e quero aromatizar minha clínica.`,
+    `Olá! Vim pela parceria IcomTV + Turma do Bem e quero saber como minha clínica pode participar.`,
     ``,
     `*Nome:* ${lead.nome}`,
     `*Clínica:* ${lead.clinica}`,
     `*Cidade:* ${lead.cidade}`,
-    lead.area ? `*Recepção:* ${lead.area}` : null,
-    `*Modelo:* ${lead.modelo}`,
+    `*Participação:* ${lead.participacao}`,
     lead.vinculo ? `*Turma do Bem:* ${lead.vinculo}` : null,
     lead.email ? `*E-mail:* ${lead.email}` : null,
   ].filter((l) => l !== null);
@@ -263,7 +179,7 @@ function initForm() {
         keepalive: true,
         body: new URLSearchParams(lead),
       });
-      if (window.dataLayer) window.dataLayer.push({ event: 'lead_senses_turmadobem', modelo: lead.modelo });
+      if (window.dataLayer) window.dataLayer.push({ event: 'lead_icomtv_turmadobem', participacao: lead.participacao });
       showSuccess(wa);
     } catch (err) {
       errorBox.innerHTML = `Não conseguimos enviar agora. <a href="${wa}" target="_blank" rel="noopener">Fale direto pelo WhatsApp</a>.`;
@@ -281,7 +197,7 @@ function initForm() {
   }
 }
 
-renderModels();
+initParticipation();
 initReveal();
 initCounters();
 initScrollUi();
