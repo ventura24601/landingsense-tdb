@@ -3,7 +3,7 @@
 Landing page de captação de leads da parceria IcomTV + Turma do Bem: parte das vendas da IcomTV é destinada
 aos programas da Turma do Bem, e a sala de espera das clínicas passa a mostrar a causa. Sem valores na página.
 
-Publicada em https://senses-turmadobem.netlify.app
+Publicada em https://icomtv-turmadobem.netlify.app
 
 Site estático: `index.html`, `styles.css`, `script.js` e `assets/`. Sem build.
 
